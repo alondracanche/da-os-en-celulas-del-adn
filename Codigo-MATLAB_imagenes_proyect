@@ -1,0 +1,41 @@
+%---Codigo para generar las caracteristicas de las imagenes---%
+%                                                             %
+%--Autores: Javier Luna, Alondra Canche, Enrique Flores       %
+%                                                             %
+
+%Se define una matriz inicial
+A=zeros(100,10);
+
+%Se abre un archivo y se le administran los permisos de escritura
+f=fopen('caracteristicas.txt','wt');
+
+%En este ciclo se ejecuta la extrasión de características de las 100 muestras
+for i=1:100
+    
+    %Se determina la foto a extraer
+    s=strcat(int2str(i),'.jpg');
+    im=imread(s);
+
+    %Como la foto esta a color, la transformamos a su escala de grises
+    im=rgb2gray(im);
+
+    %Generamos el histograma de dicha imagen
+    hist=imhist(im);
+    
+    %En este loop interno se extraen los promedios de 16 intervalos del histograma
+    for j=1:16
+        
+        A(i,j)=sum(hist(16*j-15:16*j))/16;
+        
+	%Se almacena cada caracteristica en dicho archivo
+	fprintf(f,'%f,',A(i,j));
+        
+    end
+    
+    %Salto en linea
+    fprintf(f,'\n');
+    
+end
+
+%Se cierra el archivo de texto y termina el programa
+fclose(f);
